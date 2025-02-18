@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "sridzar1234@gmail.com/jenkins-docker-app"
+        IMAGE_NAME = "sridzar007/jenkins-docker-app"
         DOCKER_CREDENTIALS = "docker-hub-credentials"
     }
 
