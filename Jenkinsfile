@@ -2,30 +2,37 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "sridzar007/jenkins-docker-app"
-        DOCKER_CREDENTIALS = "docker-hub-credentials"
+        DOCKER_IMAGE = "your-dockerhub-username/web-app:latest"
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/sridhar7601/jenkins-docker-app.git'
+                git branch: 'main', url: 'https://github.com/your-username/your-repo.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh 'docker push $IMAGE_NAME'
+                withCredentials([string(credentialsId: 'docker-hub-password', variable: 'DOCKER_PASSWORD')]) {
+                    sh """
+                    echo "$DOCKER_PASSWORD" | docker login -u "your-dockerhub-username" --password-stdin
+                    docker push $DOCKER_IMAGE
+                    """
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }

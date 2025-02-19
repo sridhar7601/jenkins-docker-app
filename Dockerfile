@@ -1,18 +1,18 @@
-    # Use official Node.js image
-FROM node:18
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files & install dependencies
-COPY package*.json ./
+# Copy package.json and install dependencies
+COPY package.json ./
 RUN npm install
 
-# Copy application files
+# Copy app files
 COPY . .
 
-# Expose port
+# Expose the port (same as in app.js)
 EXPOSE 3000
 
-# Start the application
+# Start the app
 CMD ["npm", "start"]
