@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "sridzar007/web-app:latest"
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
     }
 
     stages {
@@ -20,18 +21,15 @@ pipeline {
 
         stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    docker push $DOCKER_IMAGE
-                    """
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
 
     post {
         always {
+            sh 'docker logout'
             cleanWs()
         }
     }
