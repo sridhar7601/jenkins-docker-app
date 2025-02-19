@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "your-dockerhub-username/web-app:latest"
+        DOCKER_IMAGE = "sridzar007/web-app:latest"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-username/your-repo.git'
+                git branch: 'main', url: 'https://github.com/sridhar7601/jenkins-docker-app.git'
             }
         }
 
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'docker-hub-password', variable: 'DOCKER_PASSWORD')]) {
                     sh """
-                    echo "$DOCKER_PASSWORD" | docker login -u "your-dockerhub-username" --password-stdin
+                    echo "$DOCKER_PASSWORD" | docker login -u "sridzar007" --password-stdin
                     docker push $DOCKER_IMAGE
                     """
                 }
